@@ -1,13 +1,13 @@
 package com.example.projectqlcv.controller;
 
 import com.example.projectqlcv.DAO.ColumnDAO;
+import com.example.projectqlcv.model.Card;
 import com.example.projectqlcv.DAO.IColumDAO;
 import com.example.projectqlcv.DAO.IUserDAO;
 import com.example.projectqlcv.DAO.UserDAO;
 import com.example.projectqlcv.model.Column;
 import com.example.projectqlcv.model.Group;
 import com.example.projectqlcv.model.Table;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -38,6 +38,24 @@ public class ColumnWorkController extends HttpServlet {
             case "addColumn":
                 createColumn(request, response);
                 break;
+            case "addCart":
+                createCart(request, response);
+                break;
+        }
+
+    }
+
+    private void createCart(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            int idColumn = Integer.parseInt(request.getParameter("idColumn"));
+            String name = request.getParameter("name");
+            Card card = new Card();
+            card.setIdColumn(idColumn);
+            card.setName(name);
+            columnDAO.addCard(card);
+            response.sendRedirect("/column");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -84,8 +102,8 @@ public class ColumnWorkController extends HttpServlet {
 
     private void showAllColumn(HttpServletRequest request, HttpServletResponse response) {
         List<Column> listColumn= columnDAO.selectAllColumn();
+        List<Card> listCard = columnDAO.selectAllCard();
         HttpSession session = request.getSession();
-        List<Table> listTable = userDAO.selectAllTable();
         try {
             session.setAttribute("listTable",listTable);
             session.setAttribute("listColumn", listColumn);
