@@ -24,10 +24,9 @@ public class ColumnDAO implements IColumDAO{
     private static final String SELECT_COMMENT_BY_ID_CARD = "select cm.id, u.name, u.avatar, cm.comment from userToCard uc join user u on uc.idUser = u.id join card c on uc.idCard = c.id join comment cm on cm.idCard = c.id where cm.idCard = ?";
     private static final String DELETE_COMMENT_BY_ID= "DELETE FROM comment WHERE id = ?";
     private static final String UPDATE_COMMENT_BY_ID= "UPDATE comment set comment = ? WHERE id = ?";
-
+    private static final String ADD_LINK_TO_SQL= "INSERT INTO card (name, link) VALUES (?,?)";
     private static final String UPDATE_CONTENT_IN_CARD = "UPDATE card SET content = ? WHERE id = ?";
     private static final String FIND_CARD_WHERE_NAME = "SELECT c.id,c.idColumn,c.name,c.content,c.comment,c.label FROM card c JOIN columnWork l ON c.idColumn = l.id JOIN tableWork t ON l.idTable = t.id WHERE c.name LIKE ? AND idTable = ?;";
-
 
     @Override
     public void addColumnWork(int idTable, String  colum) {
@@ -146,6 +145,28 @@ public class ColumnDAO implements IColumDAO{
         }
         return rowUpdate;
     }
+
+    @Override
+    public void addCardLink(Card card) {
+        try {
+            Connection connection = DataConnector.getConnection();
+
+            // Tiếp tục thêm vào bảng card
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_LINK_TO_SQL, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, card.getName());
+            preparedStatement.setString(2, card.getLink());
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            int idCard = 0;
+            if (resultSet.next()) {
+                idCard = resultSet.getInt(1);
+            }
+            card.setId(idCard);
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Override
     public List<Card> selectAllCard() {

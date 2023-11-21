@@ -802,10 +802,21 @@
                         <i class="fa-solid fa-tag" style="color: #000000;"></i>
                         <span>Label</span>
                     </div>
-                    <div class="boxIconCard">
-                        <i class="fa-solid fa-paperclip" style="color: #000000;"></i>
-                        <span>Attach</span>
-                    </div>
+                    <form method="POST" action="FileUploadServlet" enctype="multipart/form-data">
+                        <div class="boxIconCard">
+                            <label for="fileInput">
+                                <i class="fa-solid fa-paperclip" style="color: #000000;"></i>
+                                <span>Attach</span>
+                            </label>
+                            <input type="file" name="file" id="fileInput" style="display:none;" />
+                        </div>
+                            <%--link--%>
+                        <div id="fileNameContainer" style="display: none;">
+                            <p>File Name:</p>
+                            <span id="fileName"></span>
+                        </div>
+                            <%--                        <input type="submit" value="Upload"/>--%>
+                    </form>
                 </div>
                 <div id="member" style="display: none;">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeMember()">×</a>
@@ -823,6 +834,22 @@
     </div>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('fileInput');
+        const fileNameContainer = document.getElementById('fileNameContainer');
+        const fileName = document.getElementById('fileName');
+
+        fileInput.addEventListener('change', function() {
+            // Hiển thị phần tử chứa tên tệp
+            fileNameContainer.style.display = 'block';
+
+            // Lấy tên tệp
+            const selectedFileName = fileInput.files[0].name;
+
+            // Hiển thị tên tệp
+            fileName.textContent = selectedFileName;
+        });
+    });
 
     // function openFormContent(id, name) {
     //     document.getElementById("formShowCard").style.display = "block";

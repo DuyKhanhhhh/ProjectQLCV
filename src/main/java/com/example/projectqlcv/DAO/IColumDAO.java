@@ -21,9 +21,9 @@ public interface IColumDAO {
     List<SelectComment> selectCommentByIdCard(int id);
     boolean deleteComment(int id);
     boolean updateComment(String name, int id);
+    void addCardLink(Card card);
 
 
     boolean updateContentInCard(int idCard , String newContent);
     List<Card> searchCard(int idTable ,String search);
-
 }
