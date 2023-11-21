@@ -20,5 +20,5 @@ public interface IColumDAO {
     List<SelectComment> selectCommentByIdCard(int id);
     boolean deleteComment(int id);
     boolean updateComment(String name, int id);
-
+    void addCardLink(Card card);
 }
